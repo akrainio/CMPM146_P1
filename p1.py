@@ -1,7 +1,6 @@
 from p1_support import load_level, show_level, save_level_costs
-from math import inf, sqrt
 from heapq import heappop, heappush
-import math
+import math, sys
 
 
 def dijkstras_shortest_path(initial_position, destination, graph, adj):
@@ -67,6 +66,9 @@ def navigation_edges(level, cell):
     dirs_card = [[1, 0], [0, 1], [-1, 0], [0, -1]]
     dirs_diag = [[1, 1], [1, -1], [-1, 1], [-1, -1]]
     center_cost = level['spaces'].get(cell)
+    if center_cost == None:
+        print("navigation_edges: cell '" + cell + "' does not exist")
+        sys.exit(2)
 
     #Loop through cardinal directions
     for dir in dirs_card:
