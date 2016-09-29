@@ -67,8 +67,7 @@ def navigation_edges(level, cell):
     dirs_diag = [[1, 1], [1, -1], [-1, 1], [-1, -1]]
     center_cost = level['spaces'].get(cell)
     if center_cost == None:
-        print("navigation_edges: cell '" + cell + "' does not exist")
-        sys.exit(2)
+        return []
 
     #Loop through cardinal directions
     for dir in dirs_card:
