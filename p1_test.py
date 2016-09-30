@@ -2,48 +2,64 @@ import unittest, math
 from p1 import navigation_edges
 
 
-class TestStringMethods(unittest.TestCase):
+def gen_level(lines):
+    walls = set()
+    spaces = {}
+    waypoints = {}
+    for y, line in enumerate(lines):
+        for x, c in enumerate(line):
+            if c == 'X':
+                walls.add((x, y))
+            elif c.isnumeric():
+                spaces[(x, y)] = float(c)
+            elif c.islower():
+                spaces[(x, y)] = 1.
+                waypoints[c] = (x, y)
 
+    level = {'walls': walls,
+             'spaces': spaces,
+             'waypoints': waypoints}
+
+    return level
+
+
+class TestStringMethods(unittest.TestCase):
     def test_navigation_edges(self):
-        r2 = math.sqrt(2)
-        spaces = {(0,0): 2,    (1,0): 2,    (2,0): 2,    (3,0): 2,    (4,0): 2,
-                  (0,1): 2,    (1,1): r2*1, (2,1): r2*2, (3,1): r2*9, (4,1): 2,
-                  (0,2): 2,    (1,2): r2*8, (2,2): r2*4, (3,2): r2*4, (4,2): 2,
-                  (0,3): 2,    (1,3): r2*9, (2,3): r2*6, (3,3): r2*1, (4,3): 2,
-                  (0,4): 2,    (1,4): 2,    (2,4): 2,    (3,4): 2,    (4,4): 2}
-        level = {'spaces': spaces}
-        expected = {(1,1): 5.0,    (2,1): r2*3.0, (3,1): 13.0,
-                    (1,2): r2*6.0,                (3,2): r2*4,
-                    (1,3): 13.0,   (2,3): r2*5.0, (3,3): 5.0}
-        navigated_edges = navigation_edges(level, (2,2))
-        navdict = {}
+        r = math.sqrt(2) * .5
+        level_code = ["XXXXX",
+                      "X387X",
+                      "X217X",
+                      "X744X",
+                      "XXXXX"]
+        level = gen_level(level_code)
+
+        expected = {(1, 1): 4 * r, (2, 1): 4.5, (3, 1): 8 * r,
+                    (1, 2): 1.5, (3, 2): 4.0,
+                    (1, 3): 8 * r, (2, 3): 2.5, (3, 3): 5 * r}
+        navigated_edges = navigation_edges(level, (2, 2))
+        actual = {}
         for e in navigated_edges:
-            navdict[e[0]] = e[1]
+            actual[e[0]] = e[1]
         for k in expected:
-            self.assertAlmostEqual(expected.get(k), navdict.get(k), 14)
+            self.assertAlmostEqual(expected.get(k), actual.get(k), 14)
 
     def test_navigation_edges_corner(self):
-        r2 = math.sqrt(2)
-        spaces = {(0, 0): r2*1, (1, 0): r2*3, (2, 0): 2,
-                  (0, 1): r2*5, (1, 1): r2*4, (2, 1): r2*2,
-                  (0, 2): 2,    (1, 2): r2*8, (2, 2): r2*4}
-        level = {'spaces': spaces}
-        expected = {                (1, 0): r2*2.0,
-                    (0, 1): r2*3.0, (1, 1): 5.0}
-        navigated_edges = navigation_edges(level, (0, 0))
-        navdict = {}
+        r = math.sqrt(2) * .5
+        level_code = ["XX",
+                      "X34"]
+        level = gen_level(level_code)
+
+        expected = {(2, 1): 3.5}
+        navigated_edges = navigation_edges(level, (1, 1))
+        actual = {}
         for e in navigated_edges:
-            navdict[e[0]] = e[1]
+            actual[e[0]] = e[1]
         for k in expected:
-            self.assertAlmostEqual(expected.get(k), navdict.get(k), 14, "" + k.__str__() + ": expected: " + expected.get(k).__str__()
-                                   + ", got: " + str(navdict.get(k)))
+            self.assertAlmostEqual(expected.get(k), actual.get(k), 14)
 
     def test_navigation_none(self):
-        spaces = {(0, 0): 1, (1, 0): 3, (2, 0): 2,
-                  (0, 1): 5, (1, 1): 4, (2, 1): 2,
-                  (0, 2): 2, (1, 2): 8, (2, 2): 4}
-        level = {'spaces': spaces}
-        self.assertEqual([], navigation_edges(level, (9, 9)))
-        spaces = {}
-        level.update(spaces)
-        self.assertEqual([], navigation_edges(level, (9, 9)))
+        level_code = ["3"]
+        level = gen_level(level_code)
+        self.assertEqual([], navigation_edges(level, (1, 1)))
+        level_none = gen_level([])
+        self.assertEqual([], navigation_edges(level, (1, 1)))
