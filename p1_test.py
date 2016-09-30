@@ -33,9 +33,9 @@ class TestStringMethods(unittest.TestCase):
                       "XXXXX"]
         level = gen_level(level_code)
 
-        expected = {(1, 1): 4 * r, (2, 1): 4.5, (3, 1): 8 * r,
-                    (1, 2): 1.5, (3, 2): 4.0,
-                    (1, 3): 8 * r, (2, 3): 2.5, (3, 3): 5 * r}
+        expected = {(1, 1): 4 * r, (2, 1): 4.5, (3, 1): 8*r,
+                    (1, 2): 1.5,                (3, 2): 4.0,
+                    (1, 3): 8 * r, (2, 3): 2.5, (3, 3): 5*r}
         navigated_edges = navigation_edges(level, (2, 2))
         actual = {}
         for e in navigated_edges:
