@@ -47,3 +47,4 @@ class TestStringMethods(unittest.TestCase):
         spaces = {}
         level.update(spaces)
         self.assertEqual([], navigation_edges(level, (9, 9)))
+        # This is a test 
